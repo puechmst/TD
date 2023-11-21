@@ -1,0 +1,41 @@
+
+\documentclass[a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\title{Programmation CUDA : \\
+la convolution}
+\date{}
+
+\begin{document}
+\maketitle
+\section{Introduction}
+La convolution est une opération de base en traitement du signal et en intelligence artificielle connexionniste. 
+Les premières couches d'un réseau de neurones profond réalisent souvent cette opération afin d'effectuer un filtrage 
+des données. Si l'on se donne un vecteur d'entrée $X=(x_0, \dots, x_{n-1})$ et un vecteur de coefficients 
+$H = (h_0, \dots, h_{p-1}), p \leq n$, le vecteur convolué  $Y = X \star H$ se définit comme suit~:
+\begin{equation}
+    \label{eq:convolution}
+    y_j = \sum_{k=\max(0,j-p)}^j x_k h_{j-k}, \, j=0 \dots n-1
+\end{equation}
+Dans le cas bidimensionnel, $X$ et $H$ sont des matrices de dimensions respectives $m\times n$ et $p \times q$ et 
+l'équation de convolution $Y=X \star H$ devient~:
+\begin{equation}
+    \label{eq:conv2D}
+    y_{i,j} = \sum_{k=\max(0,i-p)}^i \sum_{l=\max(0,j-q)}^j x_{i,j} h_{i-k,j-l}, \, i=O\dots m-1, \, j=0\dots n-1
+\end{equation}
+\section{Approche naïve}
+\subsection{Noyau de calcul}
+En s'inspirant de ce qui a été vu en cours pour le produit matriciel, proposer un noyau CUDA permettant de calculer
+le produit de convolution de deux vecteurs et de deux matrices. Les signatures des deux fonctions seront~: 
+\begin{tabular}{c}
+\leftline{\scriptsize\texttt{\_\_global\_\_void conv1D(int n, float *x, int p, float *h, float *y);}} \\
+\leftline{\scriptsize\texttt{\_\_global\_\_ void conv2D(int m, int n, float *x, int p, int q, float *h, float *y);}}
+\end{tabular}
+\subsection{Appel du noyau}
+Tester le bon fonctionnement du noyau en générant des vecteurs et des matrices aléatoires et en comparant avec les 
+résultats obtenus sur CPU. Déterminer approximativement les performances en GFLOPS du produit de convolution sur CPU et GPU.
+\section{Codage par blocs}
+On peut améliorer les performances avec la mémoire partagée. Proposez un nouveau noyau exploitant au mieux la 
+localité des données et comparez avec l'approche naïve.
+\end{document}
